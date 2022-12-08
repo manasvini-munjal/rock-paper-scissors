@@ -1,5 +1,24 @@
 const gameValues = ["rock", "paper", "scissors"];
-let winner;
+const rock = document.querySelector('.rock');
+const paper = document.querySelector('.paper');
+const scissors = document.querySelector('.scissors');
+ 
+rock.addEventListener('click', () => {
+  playRound('rock', getComputerChoice());
+});
+paper.addEventListener('click', () => {
+  playRound('paper', getComputerChoice());
+});
+scissors.addEventListener('click', () => {
+  playRound('scissors', getComputerChoice());
+});
+
+const result = document.querySelector('.result p');
+const playerScore = document.querySelector('.player-score em');
+const computerScore = document.querySelector('.computer-score em');
+const winner = document.querySelector('.winner p')
+const reset = document.querySelector('.play-again');
+
 let playerWins = 0;
 let computerWins = 0;
 
@@ -11,56 +30,50 @@ function playRound(playerSelection, computerSelection) {
     let playerValue;
     playerValue = playerSelection.toLowerCase();
      if(playerValue === 'rock' && computerSelection === 'scissors') {
-        playerWins++;
-        return `You Win! ${playerValue} beats ${computerSelection}`;
+       result.textContent = `You Win! ${playerValue} beats ${computerSelection}`;
+       incrementPlayerWins();
     } else if (playerValue === 'paper' && computerSelection === 'rock') {
-        playerWins++;
-        return `You Win! ${playerValue} beats ${computerSelection}`;
-    } else if (playerValue === 'scissors' && computerSelection === 'paper') {
-        playerWins++;
-        return `You Win! ${playerValue} beats ${computerSelection}`; 
+        result.textContent = `You Win! ${playerValue} beats ${computerSelection}`;
+        incrementPlayerWins();
+    } else if (playerValue === 'scissors' && computerSelection === 'paper') { 
+       result.textContent = `You Win! ${playerValue} beats ${computerSelection}`;
+       incrementPlayerWins();
     } else if (playerValue === computerSelection){
-        return `Tie`;
+       result.textContent = `Tie`;
     } else {
-        computerWins++;
-        return `You Lose! ${computerSelection} beats ${playerValue}`;
-    }
+       result.textContent = `You Lose! ${computerSelection} beats ${playerValue}`;
+       incrementComputerWins();
+    } 
 }
 
-function game() {
-    /* Call playRound() 5 times to keep score
-       and report winner or loser
-    */
-    for (let i = 1; i <=5; i++) {
-     const computerSelection =  getComputerChoice();
-     let playerSelection =  prompt("Enter either rock, paper or scissors", " ");
-      if(playerSelection) {
-        
-        result = playRound(playerSelection, computerSelection);
-         console.log(result);
-      } else if (playerSelection = ''){
-        console.log('No value entered');
-        break;
-      } else {
-        console.log('Exit Game');
-        break;
-      }
-     
-     //return result;
-     
-    // Report a winner or loser
-  
-   }
-   console.log(playerWins);
-   console.log(computerWins);
-   if (playerWins > computerWins) {
-    console.log("Player Wins");
-   } else {
-    console.log("Computer Wins");
-   }
-  
+/* Function that updates the score variable and the HTML element value */
+const updateScore = (player, computer) => {
+  //if(isNaN(score)) return;
+  if( player < 6 || computer < 6) {
+   playerScore.textContent = `${player}`;
+   computerScore.textContent = `${computer}`;
+  } 
+  if (player === 5) {
+    winner.textContent  = `Player Wins! `;
+    reset.classList.add('reset');
+  }
+  if (computer === 5) {
+    winner.textContent  = ` Computer Wins! `;
+    reset.classList.add('reset');
+  }
+}
 
-}   
+const incrementPlayerWins = () => {
+  updateScore(++playerWins, computerWins);
+}
 
-game();
+const incrementComputerWins = () => {
+  updateScore(playerWins, ++computerWins);
+}
+const resetGame = () => {
+  updateScore(playerWins = 0, computerWins = 0);
+  reset.classList.remove('reset');
+}
+
+reset.addEventListener('click', resetGame);
     
